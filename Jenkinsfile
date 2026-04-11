@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        jdk 'jdk-17'
+        jdk 'jdk-21'
         maven 'maven'
     }
 
@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/YOUR_USERNAME/YOUR_GITHUB_REPO_URL.git'
+                git branch: 'main', url: 'https://github.com/tarunjeetsingh1991/springboot-k8-example.git'
             }
         }
 
