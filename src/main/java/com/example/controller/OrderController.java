@@ -29,4 +29,9 @@ public class OrderController {
     public Order getOrderById(@PathVariable int id){
         return service.getOrderById(id);
     }
+    
+    @GetMapping("/sorted")
+    public List<Order> getOrdersSorted(){
+        return service.sortOrders();
+    }
 }

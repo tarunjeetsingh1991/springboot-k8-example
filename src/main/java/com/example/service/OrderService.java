@@ -7,6 +7,7 @@ import com.example.entity.Order;
 import com.example.repository.OrderRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -26,4 +27,11 @@ public class OrderService {
         return repository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("Invalid id : "+id));
     }
+    
+    public List<Order> sortOrders(){
+        return repository.findAll().stream()
+        		.sorted((s1,s2) -> s1.getName().compareTo(s2.getName()))
+        		.collect(Collectors.toList());
+    }
+
 }
