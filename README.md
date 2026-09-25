@@ -336,6 +336,9 @@ kubectl get pvc
 
 ```bash
 minikube service springboot-crud-svc --url
+
+open the dashboard, use : 
+minikube dashboard
 ```
 
 If needed, use:

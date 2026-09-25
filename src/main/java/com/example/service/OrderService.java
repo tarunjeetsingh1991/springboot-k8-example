@@ -33,5 +33,11 @@ public class OrderService {
         		.sorted((s1,s2) -> s1.getName().compareTo(s2.getName()))
         		.collect(Collectors.toList());
     }
+    
+    public void deleteOrder(int id)
+    {
+    	Order ord = getOrderById(id);
+    	repository.delete(ord);
+    }
 
 }

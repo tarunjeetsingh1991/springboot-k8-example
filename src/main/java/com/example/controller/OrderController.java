@@ -34,4 +34,10 @@ public class OrderController {
     public List<Order> getOrdersSorted(){
         return service.sortOrders();
     }
+    
+    @DeleteMapping("/{id}")
+    public void deleteOrder(@PathVariable int id)
+    {
+    	service.deleteOrder(id);
+    }
 }
