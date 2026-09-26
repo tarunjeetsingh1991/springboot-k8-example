@@ -8,15 +8,16 @@ pipeline {
 
     environment {
         APP_NAME = 'springboot-crud-k8s'
-        APP_VERSION = '1.0'
-        IMAGE_NAME = "${APP_NAME}:${APP_VERSION}"
+        IMAGE_NAME = "${APP_NAME}:${BUILD_NUMBER}"
         DEPLOYMENT_NAME = 'springboot-crud-deployment'
+        CONTAINER_NAME = 'springboot-crud-k8s'
     }
 
     stages {
+
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/tarunjeetsingh1991/springboot-k8-example.git'
+                checkout scm
             }
         }
 
@@ -34,12 +35,13 @@ pipeline {
 
         stage('Package') {
             steps {
-                bat 'mvn clean package -DskipTests'
+                bat 'mvn package -DskipTests'
             }
         }
 
         stage('Build Docker Image') {
             steps {
+                echo "Building Docker image: ${IMAGE_NAME}"
                 bat 'docker build -t %IMAGE_NAME% .'
             }
         }
@@ -64,10 +66,14 @@ pipeline {
             }
         }
 
-        stage('Restart Rollout') {
+        stage('Deploy New Image') {
             steps {
-                bat 'kubectl rollout restart deployment/%DEPLOYMENT_NAME%'
-                bat 'kubectl rollout status deployment/%DEPLOYMENT_NAME%'
+                bat '''
+                kubectl set image deployment/%DEPLOYMENT_NAME% ^
+                %CONTAINER_NAME%=%IMAGE_NAME%
+                '''
+
+                bat 'kubectl rollout status deployment/%DEPLOYMENT_NAME% --timeout=180s'
             }
         }
 
@@ -76,6 +82,7 @@ pipeline {
                 bat 'kubectl get deployments'
                 bat 'kubectl get pods'
                 bat 'kubectl get svc'
+                bat 'kubectl get deployment %DEPLOYMENT_NAME% -o wide'
             }
         }
     }
@@ -89,6 +96,7 @@ pipeline {
 
 Job Name: ${env.JOB_NAME}
 Build Number: ${env.BUILD_NUMBER}
+Docker Image: ${env.IMAGE_NAME}
 Build URL: ${env.BUILD_URL}
 
 The application was built, tested, dockerized, loaded into Minikube, and deployed to Kubernetes successfully.
