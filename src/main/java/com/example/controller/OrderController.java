@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.Order;
@@ -36,8 +37,8 @@ public class OrderController {
     }
     
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable int id)
-    {
-    	service.deleteOrder(id);
+    public ResponseEntity<Void> deleteOrder(@PathVariable int id) {
+        service.deleteOrder(id);
+        return ResponseEntity.noContent().build();
     }
 }
